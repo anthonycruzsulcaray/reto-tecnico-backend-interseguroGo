@@ -156,8 +156,10 @@ func main() {
 			return c.Status(500).JSON(fiber.Map{"error": "Fallo al procesar datos"})
 		}
 
+		apiExpress := os.Getenv("API_EXPRESS")
+		fmt.Printf("API_EXPRESS: %s\n", apiExpress)
 		// Enviar el payload a la API de Node.js
-		resp, err := http.Post(os.Getenv("API_EXPRESS")+"/analyze", "application/json", bytes.NewBuffer(payloadJSON))
+		resp, err := http.Post(apiExpress+"/analyze", "application/json", bytes.NewBuffer(payloadJSON))
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": "Fallo al comunicarse con el servidor Express"})
 		}
