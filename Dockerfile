@@ -1,12 +1,8 @@
 # Utilizar la imagen base de Go (Alpine)
 FROM golang:1.23-alpine
 
-# Instalar dependencias necesarias y herramientas para la compilación
-RUN apk add --no-cache \
-    bash \
-    git \
-    make \
-    && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# Instalar dependencias necesarias
+RUN apk add --no-cache bash git make
 
 # Crear y establecer el directorio de trabajo
 WORKDIR /app
@@ -22,9 +18,6 @@ COPY . .
 
 # Exponer el puerto 8080 para que sea accesible desde fuera del contenedor
 EXPOSE 8080
-
-# Cargar las variables de entorno desde el archivo .env (si es necesario)
-COPY .env ./
 
 # Ejecutar la aplicación Go
 CMD ["go", "run", "main.go"]
