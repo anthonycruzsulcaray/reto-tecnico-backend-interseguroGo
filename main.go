@@ -28,13 +28,20 @@ func rotateMatrix(matrix [][]float64) [][]float64 {
 	cols := len(matrix[0])
 	rotated := make([][]float64, cols)
 
+	// Se itera sobre las columnas de la matriz original
 	for i := 0; i < cols; i++ {
+		// Para cada columna, se crea una nueva fila en la matriz rotada
 		rotated[i] = make([]float64, rows)
+		// Luego, se itera sobre las filas de la matriz original y
+		// se asigna el valor correspondiente a la matriz rotada
 		for j := 0; j < rows; j++ {
+			// Toma el valor de la fila rows-j-1
+			// (invirtiendo el orden de las filas) y la columna i de la matriz original,
+			// y lo coloca en la posición [i][j] de la matriz rotada.
 			rotated[i][j] = matrix[rows-j-1][i]
 		}
 	}
-
+	// La matriz rotada se devuelve como resultado
 	return rotated
 }
 
@@ -122,6 +129,7 @@ func main() {
 		// Convertir las matrices Q y R en arreglos bidimensionales
 		qData := make([][]float64, qRows)
 		rData := make([][]float64, rRows)
+
 		for i := 0; i < qRows; i++ {
 			qData[i] = make([]float64, qCols)
 			for j := 0; j < qCols; j++ {
@@ -172,6 +180,10 @@ func main() {
 		}
 
 		// Devolver el JSON final al cliente
+		jsonResponse := fmt.Sprintf("Response %v \n", result)
+		fmt.Println("Response en formato JSON:")
+		fmt.Println(jsonResponse)
+
 		return c.JSON(result)
 	})
 
