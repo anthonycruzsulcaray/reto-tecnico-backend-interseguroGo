@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
 	"log"
 	"math"
 	"net/http"
@@ -12,7 +13,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/joho/godotenv"
 	"gonum.org/v1/gonum/mat"
 
 	_ "github.com/anthonycruzsulcaray/reto-tecnico-backend-interseguroGo/docs"
@@ -51,19 +51,23 @@ func main() {
 	app := fiber.New()
 	// Ruta para la documentación Swagger
 	app.Get("/swagger/*", fiberSwagger.WrapHandler)
+
+	// Middleware para registrar las solicitudes
 	app.Use(logger.New())
+	// Configurar CORS para permitir solicitudes desde el front-end (localhost:5173)
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://127.0.0.1:8080, http://localhost:8080", // Permitir solicitudes de cualquier origen
+		AllowMethods: "GET,POST,PUT,OPTIONS,DELETE",                  // Métodos permitidos
+		AllowHeaders: "Content-Type",                                 // Encabezados permitidos
+	}))
 
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %s", err)
 	}
 
-	// Configurar CORS para permitir solicitudes desde el front-end (localhost:5173)
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",                   // Permitir solicitudes de cualquier origen
-		AllowMethods: "GET,POST,PUT,DELETE", // Métodos permitidos
-		AllowHeaders: "Content-Type",        // Encabezados permitidos
-	}))
+	// Servir archivos estáticos desde la carpeta "frontend"
+	app.Static("/", "./frontend")
 
 	// @Summary Realiza la factorización QR de una matriz
 	// @Description Recibe una matriz bidimensional, realiza la factorización QR y envía los datos a una API externa.
