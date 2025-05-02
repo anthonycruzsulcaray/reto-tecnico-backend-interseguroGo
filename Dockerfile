@@ -10,6 +10,9 @@ WORKDIR /app
 # Copiar los archivos go.mod y go.sum al contenedor
 COPY go.mod go.sum ./
 
+# Copiar el archivo .env al contenedor
+COPY .env .env
+
 # Eliminar dependencias no utilizadas
 RUN go mod tidy
 
